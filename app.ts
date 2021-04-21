@@ -39,9 +39,9 @@ if(process.env.DEBUG) {
   })
 } else {
   loggerOptions.meta = false
-  if (typeof global.it === 'function') {
-    loggerOptions.level = 'http'
-  }
+  // if (typeof global.it === 'function') {
+  //   loggerOptions.level = 'http'
+  // }
 }
 
 app.use(expressWinston.logger(loggerOptions))
