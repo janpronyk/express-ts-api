@@ -10,10 +10,6 @@ class UsersService implements CRUD {
       return UsersDao.addUser(resource)
     }
 
-    async deleteById(id: string) {
-      return UsersDao.removeUserById(id)
-    }
-
     async list(limit: number, page: number) {
       return UsersDao.getUsers()
     }
@@ -36,8 +32,11 @@ class UsersService implements CRUD {
 
     async getUserByEmailWithPassword(email: string) {
       return UsersDao.getUserByEmailWithPassword(email);
-  }
-
+    }
+    
+    async deleteById(id: string) {
+      return UsersDao.removeUserById(id)
+    }
 }
 
 export default new UsersService()

@@ -5,9 +5,11 @@ import * as winston from 'winston'
 import * as expressWinston from 'express-winston'
 import cors from 'cors'
 import debug from 'debug'
+import helmet from 'helmet'
 
 import { CommonRoutesConfig } from './common/common.routes.config'
 import { UserRoutes } from './users/users.routes.config'
+import { AuthRoutes } from './auth/auth.routes.config'
 
 
 const app: Application = express()
@@ -19,6 +21,7 @@ const debugLog: debug.IDebugger = debug('app')
 
 app.use(express.json())
 app.use(cors())
+app.use(helmet())
 
 const loggerOptions: expressWinston.LoggerOptions = {
   transports: [new winston.transports.Console()],
@@ -36,16 +39,20 @@ if(process.env.DEBUG) {
   })
 } else {
   loggerOptions.meta = false
+  if (typeof global.it === 'function') {
+    loggerOptions.level = 'http'
+  }
 }
 
 app.use(expressWinston.logger(loggerOptions))
 
 
 routes.push(new UserRoutes(app))
+routes.push(new AuthRoutes(app))
 
 
 app.get('/', (req: Request, res: Response) => {
-  res.status(200).send(`Server up and running!`)
+  res.status(200).send(`Server running at http://localhost:${PORT}`)
 });
 
 server.listen(PORT, () => {
