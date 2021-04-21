@@ -19,7 +19,6 @@ class UsersMiddleware {
       }
   }
 
-
   async validateSameEmailDoesntExist(
     req: Request, res: Response, next: NextFunction
   ) {
@@ -31,7 +30,6 @@ class UsersMiddleware {
       next()
     }
   }
-
 
   async validateSameEmailBelongToSameUser(
     req: Request, res: Response, next: NextFunction

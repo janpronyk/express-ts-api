@@ -19,7 +19,7 @@ class UsersService implements CRUD {
     }
 
     async patchById(id: string, resource: PatchUserDto): Promise<any> {
-      return UsersDao.updateUserByUd(id, resource)
+      return UsersDao.updateUserById(id, resource)
     }
 
     async putById(id: string, resource: PutUserDto): Promise<any> {

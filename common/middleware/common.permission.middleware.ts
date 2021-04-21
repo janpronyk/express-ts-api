@@ -17,8 +17,8 @@ class CommonPermissionMiddleware {
           } else {
             res.status(403).send()
           }
-      } catch (e) {
-        log(e)
+      } catch (err) {
+        log(err)
       }
     }
   }

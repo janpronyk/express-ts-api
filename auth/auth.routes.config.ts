@@ -33,7 +33,6 @@ export class AuthRoutes extends CommonRoutesConfig {
       jwtMiddleware.verifyRefreshBodyField,
       jwtMiddleware.validRefreshNeeded,
       authController.createJWT
-
     ])
 
     return this.app
