@@ -36,10 +36,10 @@ class UsersMiddleware {
   async validateSameEmailBelongToSameUser(
     req: Request, res: Response, next: NextFunction
   ) {
-    const { id } = req.params
+    const {userId } = req.params
     const { email } = req.body
     const user = await usersService.getUserByEmail(email)
-    if(user && user.id == id) {
+    if(user && user.id == userId) {
       next()
     } else {
       res.status(400).send({ error: 'Invalid email '})

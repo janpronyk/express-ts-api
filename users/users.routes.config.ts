@@ -1,5 +1,7 @@
 import { Application, Request, Response, NextFunction } from 'express'
 import { CommonRoutesConfig } from '../common/common.routes.config';
+import UsersController from './controllers/users.controller';
+import UsersMiddleware from './middleware/users.middleware';
 
 
 export class UserRoutes extends CommonRoutesConfig {
@@ -10,34 +12,32 @@ export class UserRoutes extends CommonRoutesConfig {
   configureRoutes() {
     const routePrefix = '/users'
 
-    this.app.route(`/users`)
-      .get((req: Request, res: Response) => {
-        res.status(200).json('List of users')
-      })
-      .post((req: Request, res: Response) => {
-        res.status(200).json('Post to users')
-      })
+    this.app
+      .route(`/users`)
+      .get(UsersController.listUsers)
+      .post(
+        UsersMiddleware.validateRequiredUserBodyFields,
+        UsersMiddleware.validateSameEmailDoesntExist,
+        UsersController.createUser
+      )
 
-    this.app.route(`${routePrefix}/:userId`)
-      .all((req: Request, res: Response, next: NextFunction) => {
-        next()
-      })
-      .get((req: Request, res: Response) =>{
-        const { userId } = req.params
-        res.status(200).json(`Get for user id ${userId}`)
-      })
-      .put((req: Request, res: Response) => {
-        const { userId } = req.params
-        res.status(200).json(`Put for user ${userId}`)
-      })
-      .patch((req: Request, res: Response) => {
-        const { userId } = req.params
-        res.status(200).json(`Patch for user ${userId}`)
-      })
-      .delete((req: Request, res: Response) => {
-        const { userId } = req.params
-        res.status(200).json(`Delete for user ${userId}`)
-      })
+    this.app.param('userId', UsersMiddleware.extractUserId)
+    this.app
+      .route(`${routePrefix}/:userId`)
+      .all(UsersMiddleware.validateUserExists)
+      .get(UsersController.getUserById)
+      .delete(UsersController.removeUser)
+    
+    this.app.put(`${routePrefix}/:userId`, [
+      UsersMiddleware.validateRequiredUserBodyFields,
+      UsersMiddleware.validateSameEmailBelongToSameUser,
+      UsersController.put
+    ])
+
+    this.app.patch(`${routePrefix}/:userId`, [
+      UsersMiddleware.validatePatchEmail,
+      UsersController.patch
+    ])
 
     return this.app
   }
