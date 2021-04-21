@@ -26,7 +26,7 @@ class UsersMiddleware {
     const { email } = req.body
     const user = await usersService.getUserByEmail(email)
     if(user) {
-      res.status(400).send({ error: 'User email already exists' })
+      res.status(400).send({ errors: ['User email already exists'] })
     } else {
       next()
     }
@@ -36,15 +36,28 @@ class UsersMiddleware {
   async validateSameEmailBelongToSameUser(
     req: Request, res: Response, next: NextFunction
   ) {
-    const {userId } = req.params
+    const { userId } = req.params
     const { email } = req.body
     const user = await usersService.getUserByEmail(email)
     if(user && user.id == userId) {
+      res.locals.user = user
       next()
     } else {
-      res.status(400).send({ error: 'Invalid email '})
+      res.status(400).send({ errors: ['Invalid email'] })
     }
   }
+
+  async userCantChangePermission(
+    req: Request, res: Response, next: NextFunction
+    ) {
+        if (res.locals.user.permissionFlags !== req.body.permissionFlags) {
+            res.status(400).send({
+                errors: ['User cannot change permission flags'],
+            });
+        } else {
+            next();
+        }
+    }
 
   validatePatchEmail = async (
     req: Request, res: Response, next: NextFunction
@@ -67,7 +80,7 @@ class UsersMiddleware {
       next()
     } else {
       res.status(404).send({
-        error: `User ${userId} not found`
+        errors: [`User ${userId} not found`]
       })
     }
   }

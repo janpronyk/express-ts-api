@@ -2,6 +2,7 @@ import { Request, Response } from 'express'
 import debug from 'debug'
 import usersService from '../services/users.service'
 import argon2  from 'argon2'
+import { PatchUserDto } from '../dto/patch.user.dto'
 
 
 const log: debug.IDebugger = debug('app:users-controller')
@@ -29,7 +30,6 @@ class UsersController {
     const { id } = req.body
     if(req.body.password)
       req.body.password = await argon2.hash(req.body.password)
-
     log(await usersService.patchById( id, req.body ))
     res.status(204).send()
   }
@@ -46,6 +46,14 @@ class UsersController {
     log(await usersService.deleteById(id))
     return res.status(204).send()
   }
+
+  async updatePermissionFlags(req: Request, res: Response) {
+    const patchUserDto: PatchUserDto = {
+        permissionFlags: parseInt(req.params.permissionFlags),
+    };
+    log(await usersService.patchById(req.body.id, patchUserDto));
+    res.status(204).send();
+}
 }
 
 export default new UsersController()
