@@ -10,19 +10,19 @@ class UsersController {
 
   async listUsers(req: Request, res: Response) {
     const users = await usersService.list(100, 0)
-    res.status(200).json({ users })
+    res.status(200).send({ users })
   }
 
   async getUserById(req: Request, res: Response) {
     const { id } = req.body.id
     const user = await usersService.readById(id)
-    res.status(200).json({ user })
+    res.status(200).send({ user })
   }
 
   async createUser(req: Request, res: Response) {
     req.body.password = await argon2.hash(req.body.password)
     const userId = await usersService.create(req.body)
-    res.status(201).json({ id: userId })
+    res.status(201).send({ id: userId })
   }
 
   async patch(req: Request, res: Response) {
@@ -31,21 +31,21 @@ class UsersController {
       req.body.password = await argon2.hash(req.body.password)
 
     log(await usersService.patchById( id, req.body ))
-    res.status(201).json({ message: 'successfuly patched user data'})
+    res.status(204).send()
   }
 
   async put(req: Request, res: Response) {
     const { id } = req.body.id
     req.body.password = await argon2.hash(req.body.password)
     log(await usersService.putById(id, req.body))
-    return res.status(201).json({ message: 'successfuly updated user' })
+    return res.status(204).send()
   }
 
   async removeUser(req: Request, res: Response) {
     const { id } = req.body.id
     log(await usersService.deleteById(id))
-    return res.status(201).json({ message: 'successfuly removed user'})
+    return res.status(204).send()
   }
 }
 
-export default UsersController
+export default new UsersController()
