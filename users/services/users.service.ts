@@ -34,5 +34,6 @@ class UsersService implements CRUD {
       return UsersDao.getUserByEmail(email)
     }
 
-
 }
+
+export default new UsersService()
