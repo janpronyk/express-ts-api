@@ -9,3 +9,121 @@ datasource db {
 generator client {
   provider = "prisma-client-js"
 }
+
+
+enum Status {
+  DRAFT
+  REVIEW
+  PUBLISHED
+  ARCHIVED
+}
+
+model ProductImage {
+  id Int @id @default(autoincrement())
+  name String @db.VarChar(255)
+  medium String @db.VarChar(255)
+  original String @db.VarChar(255)
+  description String
+
+  productId Int  @map("product_id")
+  product Product @relation(fields: [productId], references: [id])
+
+  @@map("image")
+}
+
+model ProductMaterial {
+    id Int @id @default(autoincrement())
+    name String @db.VarChar(255)
+    slug String @db.VarChar(255)
+    
+    description String
+
+    icon String @db.VarChar(120)
+    color String @db.VarChar(100)
+
+    products Product[]
+    
+    @@index([slug])
+    @@unique([slug])
+    @@map("product_material")
+}
+
+model ProductCategory {
+    id Int @id @default(autoincrement())
+    name String @db.VarChar(255)
+    slug String @db.VarChar(255)
+
+    status Status @default(DRAFT)
+    
+    description String
+
+    icon String @db.VarChar(120)
+    color String @db.VarChar(100)
+
+    products Product[]
+
+    @@index([slug])
+    @@unique([slug])
+    @@map("product_category")
+}
+
+model Product {
+    id Int @id @default(autoincrement())
+    name String @db.VarChar(255)
+    slug String @db.VarChar(255)
+    sku String @db.VarChar(255)
+
+    isFeatured Boolean @default(false)  @map("is_featured")
+    status Status @default(DRAFT)
+
+    description String
+
+    image ProductImage?
+
+    gallery ProductImage[]
+
+    width Int
+    height Int
+    depth Int
+
+    weight Float
+
+    price Decimal
+    discount Int @default(0)
+
+    categoryId Int  @map("category_id")
+    category ProductCategory @relation(fields: [categoryId], references: [id])
+
+    materials ProductMaterial[]
+
+    authorId Int @map("author_id")
+    User User @relation(fields: [authorId], references: [id])
+
+    createdAt DateTime @default(now()) @db.Timestamp(6) @map("created_at")
+    updatedAt DateTime @default(now()) @db.Timestamp(6) @map("updated_at")
+
+    @@index([slug, sku])
+    @@unique([slug,sku])
+    @@map("product")
+}
+
+model Profile {
+    id Int @default(autoincrement()) @id
+    bio String?
+    User User @relation(fields: [userId], references: [id])
+    userId Int @map("user_id")
+
+    @@unique([userId])
+    @@map("profile")
+}
+
+model User {
+    id Int @default(autoincrement()) @id
+    email String @db.VarChar(255)
+    username String? @db.VarChar(255)
+    profile Profile?
+    products Product[]
+
+    @@unique([email])
+    @@map("user")
+}
