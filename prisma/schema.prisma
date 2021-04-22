@@ -26,7 +26,10 @@ model ProductImage {
   description String
 
   productId Int  @map("product_id")
-  product Product @relation(fields: [productId], references: [id])
+  product Product @relation("image", fields: [productId], references: [id])
+
+  gallery Product @relation("gallery", fields: [galleryId], references: [id])
+  galleryId Int
 
   @@map("image")
 }
@@ -78,9 +81,8 @@ model Product {
 
     description String
 
-    image ProductImage?
-
-    gallery ProductImage[]
+    image ProductImage? @relation("image")
+    gallery ProductImage[] @relation("gallery")
 
     width Int
     height Int
