@@ -2,15 +2,8 @@ import { PrismaClient, Prisma } from '@prisma/client'
 
 const prisma = new PrismaClient()
 
-
 const userData: Prisma.UserCreateInput[] = [
-    {
-        username: 'janek',
-        email: 'spikedevelopment@gmail.com',
-        password: 'testpass',
-        permissionFlags: 'ADMIN_PERMISSION'
-
-    }
+ 
 ]
 
 async function main() {

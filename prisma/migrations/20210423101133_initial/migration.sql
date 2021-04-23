@@ -101,22 +101,35 @@ CREATE TABLE "product" (
 );
 
 -- CreateTable
-CREATE TABLE "profile" (
+CREATE TABLE "user" (
     "id" SERIAL NOT NULL,
-    "bio" TEXT,
-    "user_id" INTEGER NOT NULL,
+    "email" VARCHAR(255) NOT NULL,
+    "username" VARCHAR(255) NOT NULL,
+    "password" VARCHAR(255) NOT NULL,
+    "avatar_image" VARCHAR(255),
+    "tokens" TEXT[],
+    "permission_flags" "PermissionFlag" NOT NULL DEFAULT E'EDITOR_PERMISSIONS',
 
     PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "user" (
+CREATE TABLE "user_profile" (
     "id" SERIAL NOT NULL,
-    "email" VARCHAR(255) NOT NULL,
-    "username" VARCHAR(255),
-    "password" VARCHAR(255),
-    "tokens" TEXT[],
-    "permission_flags" "PermissionFlag" NOT NULL DEFAULT E'EDITOR_PERMISSIONS',
+    "firstName" TEXT,
+    "lastName" TEXT NOT NULL,
+    "bio" TEXT,
+    "facebook_url_1" VARCHAR(255),
+    "linkedin_url" VARCHAR(255),
+    "youtube_url" VARCHAR(255),
+    "address_line_1" VARCHAR(255),
+    "address_line_2" VARCHAR(255),
+    "city" VARCHAR(120),
+    "post_code" VARCHAR(20),
+    "state" VARCHAR(20),
+    "country" VARCHAR(20),
+    "notes" TEXT[],
+    "user_id" INTEGER NOT NULL,
 
     PRIMARY KEY ("id")
 );
@@ -152,10 +165,10 @@ CREATE INDEX "product.slug_sku_index" ON "product"("slug", "sku");
 CREATE UNIQUE INDEX "product.slug_sku_unique" ON "product"("slug", "sku");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "profile.user_id_unique" ON "profile"("user_id");
+CREATE UNIQUE INDEX "user.email_unique" ON "user"("email");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "user.email_unique" ON "user"("email");
+CREATE UNIQUE INDEX "user_profile.user_id_unique" ON "user_profile"("user_id");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "_ProductToProductMaterial_AB_unique" ON "_ProductToProductMaterial"("A", "B");
@@ -176,7 +189,7 @@ ALTER TABLE "product" ADD FOREIGN KEY ("category_id") REFERENCES "product_catego
 ALTER TABLE "product" ADD FOREIGN KEY ("author_id") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "profile" ADD FOREIGN KEY ("user_id") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "user_profile" ADD FOREIGN KEY ("user_id") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "_ProductToProductMaterial" ADD FOREIGN KEY ("A") REFERENCES "product"("id") ON DELETE CASCADE ON UPDATE CASCADE;

@@ -2,7 +2,6 @@ import { Request, Response } from 'express'
 import debug from 'debug'
 import usersService from '../services/users.service'
 import argon2  from 'argon2'
-import { PatchUserDto } from '../dto/patch.user.dto'
 
 
 const log: debug.IDebugger = debug('app:users-controller')
@@ -10,7 +9,7 @@ const log: debug.IDebugger = debug('app:users-controller')
 class UsersController {
 
   async listUsers(req: Request, res: Response) {
-    const users = await usersService.list(100, 0)
+    const users = await usersService.list(15, 0)
     res.status(200).send({ users })
   }
 
@@ -47,13 +46,13 @@ class UsersController {
     return res.status(204).send()
   }
 
-  async updatePermissionFlags(req: Request, res: Response) {
-    const patchUserDto: PatchUserDto = {
-        permissionFlags: parseInt(req.params.permissionFlags),
-    };
-    log(await usersService.patchById(req.body.id, patchUserDto));
-    res.status(204).send();
-}
+  // async updatePermissionFlags(req: Request, res: Response) {
+  //   const patchUserDto: Prisma.UserCreateInput = {
+  //       permissionFlags: parseInt(req.params.permissionFlags),
+  //   };
+  //   log(await usersService.patchById(req.body.id, patchUserDto));
+  //   res.status(204).send();
+// }
 }
 
 export default new UsersController()
