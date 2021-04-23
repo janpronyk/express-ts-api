@@ -11,9 +11,6 @@
   "keywords": [],
   "author": "Spikedev.",
   "license": "ISC",
-  "prisma": {
-    "schema": "./src/prisma/schema.prisma"
-  },
   "dependencies": {
     "@prisma/client": "^2.21.2",
     "argon2": "^0.27.2",

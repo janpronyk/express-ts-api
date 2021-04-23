@@ -1,0 +1,210 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+
+enum Status {
+  DRAFT
+  REVIEW
+  PUBLISHED
+  ARCHIVED
+}
+
+enum CMSPageType {
+  STANDARD
+  GALLERY
+  ARTICLE
+  BLOG
+  NEWS
+}
+
+model ProductImage {
+  id Int @id @default(autoincrement())
+  name String @db.VarChar(255)
+
+  medium String @db.VarChar(255)
+  original String @db.VarChar(255)
+  
+  description String
+
+  productId Int  @map("product_id")
+  product Product @relation(fields: [productId], references: [id])
+
+  isGalleryImage Boolean @default(false) @map("is_gallery_image")
+  isActive Boolean @default(false) @map("is_active")
+
+  sortOrded Int  @default(0) @map("sort_order")
+
+  @@map("product_image")
+}
+
+model CMSPageImage {
+  id Int @id @default(autoincrement())
+  name String @db.VarChar(255)
+
+  medium String @db.VarChar(255)
+  original String @db.VarChar(255)
+  
+  description String
+
+  cmspageId Int  @map("cmspage_id")
+  cmspage CMSPage @relation(fields: [cmspageId], references: [id])
+
+  isGalleryImage Boolean @default(false) @map("is_gallery_image")
+  isActive Boolean @default(false) @map("is_active")
+
+  sortOrded Int  @default(0) @map("sort_order")
+
+  @@map("cms_page_image")
+}
+
+model CMSPage {
+    id Int @id @default(autoincrement())
+    name String @db.VarChar(255)
+    slug String @db.VarChar(255)
+
+    status Status @default(DRAFT)
+    pageType CMSPageType @default(STANDARD) @map("cms_page_type")
+
+    body String
+
+    customFields Json @map("custom_fields")
+
+    icon String @db.VarChar(120)
+    color String @db.VarChar(100)
+
+    images CMSPageImage[]
+    
+    @@index([slug])
+    @@unique([slug])
+    @@map("cms_page")
+}
+
+model ProductMaterial {
+    id Int @id @default(autoincrement())
+    name String @db.VarChar(255)
+    slug String @db.VarChar(255)
+    
+    description String
+
+    icon String @db.VarChar(120)
+    color String @db.VarChar(100)
+
+    products Product[]
+    
+    @@index([slug])
+    @@unique([slug])
+    @@map("product_material")
+}
+
+model ProductCategory {
+    id Int @id @default(autoincrement())
+    name String @db.VarChar(255)
+    slug String @db.VarChar(255)
+
+    status Status @default(DRAFT)
+    
+    description String
+
+    icon String @db.VarChar(120)
+    color String @db.VarChar(100)
+
+    products Product[]
+
+    @@index([slug])
+    @@unique([slug])
+    @@map("product_category")
+}
+
+model Product {
+    id Int @id @default(autoincrement())
+    name String @db.VarChar(255)
+    slug String @db.VarChar(255)
+    sku String @db.VarChar(255)
+
+    isFeatured Boolean @default(false)  @map("is_featured")
+    status Status @default(DRAFT)
+
+    description String
+
+    images ProductImage[]
+
+    width Int
+    height Int
+    depth Int
+
+    weight Float
+
+    price Decimal
+    discount Int @default(0)
+
+    categoryId Int  @map("category_id")
+    category ProductCategory @relation(fields: [categoryId], references: [id])
+
+    materials ProductMaterial[]
+
+    authorId Int @map("author_id")
+    User User @relation(fields: [authorId], references: [id])
+
+    createdAt DateTime @default(now()) @db.Timestamp(6) @map("created_at")
+    updatedAt DateTime @default(now()) @db.Timestamp(6) @map("updated_at")
+
+    @@index([slug, sku])
+    @@unique([slug,sku])
+    @@map("product")
+}
+
+model User {
+    id Int @default(autoincrement()) @id
+    email String @db.VarChar(255)
+    username String @db.VarChar(255)
+    password String @db.VarChar(255)
+
+    avatarImage String? @db.VarChar(255) @map("avatar_image")
+
+    profile UserProfile?
+    products Product[]
+
+    tokens String[]
+
+    permissionFlags Int @default(0)
+
+    @@unique([email])
+    @@map("user")
+}
+
+model UserProfile {
+    id Int @default(autoincrement()) @id
+    firstName String?
+    lastName String
+
+    bio String?
+
+    facebookUrl String? @db.VarChar(255) @map("facebook_url_1")
+    linkedInUrl String? @db.VarChar(255) @map("linkedin_url")
+    youtubeUrl String? @db.VarChar(255) @map("youtube_url")
+
+    addressLine1 String? @db.VarChar(255) @map("address_line_1")
+    addressLine2 String? @db.VarChar(255) @map("address_line_2")
+    city String? @db.VarChar(120)
+    postCode String? @db.VarChar(20) @map("post_code")
+    state String? @db.VarChar(20)
+    country String? @db.VarChar(20)
+
+    notes String[]
+
+    User User @relation(fields: [userId], references: [id])
+    userId Int @map("user_id")
+
+    @@unique([userId])
+    @@map("user_profile")
+}
+
