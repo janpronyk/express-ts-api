@@ -69,7 +69,7 @@ model CMSPageImage {
 model CMSPage {
     id Int @id @default(autoincrement())
     name String @db.VarChar(255)
-    slug String @db.VarChar(255)
+    slug String @unique @db.VarChar(255)
 
     status Status @default(DRAFT)
     pageType CMSPageType @default(STANDARD) @map("cms_page_type")
@@ -84,14 +84,13 @@ model CMSPage {
     images CMSPageImage[]
     
     @@index([slug])
-    @@unique([slug])
     @@map("cms_page")
 }
 
 model ProductMaterial {
     id Int @id @default(autoincrement())
     name String @db.VarChar(255)
-    slug String @db.VarChar(255)
+    slug String @unique @db.VarChar(255)
     
     description String
 
@@ -101,14 +100,13 @@ model ProductMaterial {
     products Product[]
     
     @@index([slug])
-    @@unique([slug])
     @@map("product_material")
 }
 
 model ProductCategory {
     id Int @id @default(autoincrement())
     name String @db.VarChar(255)
-    slug String @db.VarChar(255)
+    slug String @unique @db.VarChar(255)
 
     status Status @default(DRAFT)
     
@@ -120,15 +118,14 @@ model ProductCategory {
     products Product[]
 
     @@index([slug])
-    @@unique([slug])
     @@map("product_category")
 }
 
 model Product {
     id Int @id @default(autoincrement())
     name String @db.VarChar(255)
-    slug String @db.VarChar(255)
-    sku String @db.VarChar(255)
+    slug String @unique @db.VarChar(255)
+    sku String @unique @db.VarChar(255)
 
     isFeatured Boolean @default(false)  @map("is_featured")
     status Status @default(DRAFT)
@@ -157,14 +154,13 @@ model Product {
     createdAt DateTime @default(now()) @db.Timestamp(6) @map("created_at")
     updatedAt DateTime @default(now()) @db.Timestamp(6) @map("updated_at")
 
-    @@index([slug, sku])
-    @@unique([slug,sku])
+    @@index([slug])
     @@map("product")
 }
 
 model User {
     id Int @default(autoincrement()) @id
-    email String @db.VarChar(255)
+    email String @unique @db.VarChar(255)
     username String @db.VarChar(255)
     password String @db.VarChar(255)
 
@@ -177,7 +173,6 @@ model User {
 
     permissionFlags Int @default(0)
 
-    @@unique([email])
     @@map("user")
 }
 
@@ -202,9 +197,8 @@ model UserProfile {
     notes String[]
 
     User User @relation(fields: [userId], references: [id])
-    userId Int @map("user_id")
+    userId Int @unique @map("user_id")
 
-    @@unique([userId])
     @@map("user_profile")
 }
 

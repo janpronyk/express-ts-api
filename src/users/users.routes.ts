@@ -1,5 +1,6 @@
 import { Application } from 'express'
 import { CommonRoutesConfig } from '../common/common.routes.config';
+import UsersController from './users.controller';
 // import UsersController from './controllers/users.controller';
 // import UsersMiddleware from './middleware/users.middleware';
 
@@ -10,7 +11,15 @@ export class UserRoutes extends CommonRoutesConfig {
   }
 
   configureRoutes() {
-    const routePrefix = '/users'
+    
+    this.app
+      .route('/users')
+      .get(UsersController.list)
+      .post(UsersController.create)
+
+    this.app
+      .route('/users/:userId')
+
     
     // this.app
     //   .route(`/users`)

@@ -1,13 +1,25 @@
-import { Prisma, PrismaClient, User } from "@prisma/client"
+import { PrismaClient, User } from "@prisma/client"
 import debug from "debug"
 
 const prisma = new PrismaClient()
-const log: debug.IDebugger = debug('app:users-dao')
+const log: debug.IDebugger = debug('app:users-service')
 
 class UsersService {
 
   constructor() {
     log('Created new instance of UsersService')
+  }
+
+  // TODO: add pagination
+  async findAll() {
+    const users = await prisma.user.findMany({
+      select: {
+        username: true,
+        email: true,
+        avatarImage: true
+      }
+    })
+    return users
   }
 
   async create(userFields: User ) {
@@ -24,14 +36,30 @@ class UsersService {
   }
 
   async findById(id: number) {
-    const user = await prisma.user.findUnique({
-      where: { id }
+    const user = await prisma.user.findFirst({
+      where: { id },
+      select: {
+        username: true,
+        email: true,
+        avatarImage: true
+      }
     })
     return user
   }
 
   async patchById(id: number, userFields: User) {
-    // TODO:
+    const result  = await prisma.user.update({
+      where: { id },
+      data: {
+        ...userFields
+      },
+      select: {
+        username: true,
+        email: true,
+        avatarImage: true
+      }
+    })
+    return result
   }
 
   async delete(id: number) {

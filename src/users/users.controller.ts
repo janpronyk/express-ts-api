@@ -7,6 +7,11 @@ const log: debug.IDebugger = debug('app:users-controller')
 
 class UsersController {
 
+  async list(req: express.Request, res: express.Response) {
+    const users = await UsersService.findAll()
+    res.status(200).send({ users })
+  }
+
   async create(req: express.Request, res: express.Response) {
     req.body.password = await argon2.hash(req.body.password)
     const userId = await UsersService.create(req.body)

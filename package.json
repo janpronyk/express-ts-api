@@ -12,7 +12,7 @@
   "author": "Spikedev.",
   "license": "ISC",
   "prisma": {
-    "schema": "./src/prisma/schema.prisma"
+    "schema": "src/prisma/schema.prisma"
   },
   "dependencies": {
     "@prisma/client": "^2.21.2",
