@@ -1,7 +1,8 @@
-import e, { Request, Response, NextFunction } from 'express'
+import { Request, Response, NextFunction } from 'express'
 
 import debug from 'debug'
 import usersService from '../services/users.service'
+import { Prisma } from '@prisma/client'
 
 
 const log: debug.IDebugger = debug('app:users-controller')
@@ -36,7 +37,7 @@ class UsersMiddleware {
   ) {
     const { userId } = req.params
     const { email } = req.body
-    const user = await usersService.getUserByEmail(email)
+    const user: any = await usersService.getUserByEmail(email)
     if(user && user.id == userId) {
       res.locals.user = user
       next()
@@ -73,7 +74,7 @@ class UsersMiddleware {
     req: Request, res: Response, next: NextFunction
   ) {
     const { userId } = req.params
-    const user = await usersService.readById(userId)
+    const user = await usersService.readById(parseInt(userId))
     if(user) {
       next()
     } else {
