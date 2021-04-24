@@ -7,10 +7,8 @@ import cors from 'cors'
 import debug from 'debug'
 import helmet from 'helmet'
 import { CommonRoutesConfig } from './common/common.routes.config'
-
-// import { CommonRoutesConfig } from './toptal/common/common.routes.config'
-// import { UserRoutes } from './toptal/users/users.routes.config'
-// import { AuthRoutes } from './toptal/auth/auth.routes.config'
+import { ProductRoutes } from './products/products.routes'
+import { UserRoutes } from '../boilerplate/users/users.routes.config'
 
 
 const app: Application = express()
@@ -47,10 +45,8 @@ if(process.env.DEBUG) {
 
 app.use(expressWinston.logger(loggerOptions))
 
-
-// routes.push(new UserRoutes(app))
-// routes.push(new AuthRoutes(app))
-
+routes.push(new UserRoutes(app))
+routes.push(new ProductRoutes(app))
 
 app.get('/', (req: Request, res: Response) => {
   res.status(200).send(`Server running at http://localhost:${PORT}`)

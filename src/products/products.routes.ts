@@ -1,9 +1,10 @@
 import { Application } from 'express'
 import { CommonRoutesConfig } from '../common/common.routes.config';
+import paramsMiddleware from '../common/middleware/params.middleware';
 import ProductsController from './products.controller';
 
 
-export class CMSPagesRoutes extends CommonRoutesConfig {
+export class ProductRoutes extends CommonRoutesConfig {
   constructor(app: Application) {
     super(app, 'ProductsRoutes')
   }
@@ -12,7 +13,9 @@ export class CMSPagesRoutes extends CommonRoutesConfig {
 
     this.app
         .route('/pages')
-        .get(ProductsController.list)
+        .get(ProductsController.list, [
+          paramsMiddleware.paginationParamsToBody
+        ])
         .post(ProductsController.create)
 
     this.app

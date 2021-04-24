@@ -11,8 +11,11 @@ class ProductsService {
   }
 
   // TODO: add pagination
-  async findAll() {
-    const result = await prisma.product.findMany({})
+  async findAll(take = 15, skip = 0) {
+    const result = await prisma.product.findMany({
+      take,
+      skip,
+    })
     return result
   }
 

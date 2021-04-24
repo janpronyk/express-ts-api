@@ -9,7 +9,9 @@ class ProductsController {
 
     // TODO: add pagination
   async list(req: express.Request, res: express.Response) {
-    const pages = await ProductsService.findAll()
+    const { take, skip } = req.body
+    const pages = await ProductsService.findAll(
+      take, skip)
     res.status(200).send({ pages })
   }
 
