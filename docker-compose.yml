@@ -2,15 +2,28 @@ version: '3'
 
 services:
 
-  database:
+  db:
     image: postgres:11-alpine
     restart: always
     expose:
       - "5432"
     ports:
-      - "5432:5432"
+      - ${POSTGRES_DEV_PORT}:5432
     environment:
       POSTGRES_DB: node-api
+      POSTGRES_USER: nodeadmin
+      POSTGRES_PASSWORD: nodepass
+  
+  
+  db-test:
+    image: postgres:11-alpine
+    restart: always
+    expose:
+      - "5432"
+    ports:
+      - ${POSTGRES_TEST_PORT}:5432
+    environment:
+      POSTGRES_DB: node-api-test
       POSTGRES_USER: nodeadmin
       POSTGRES_PASSWORD: nodepass
 

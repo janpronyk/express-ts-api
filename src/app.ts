@@ -8,7 +8,6 @@ import debug from 'debug'
 import helmet from 'helmet'
 import { CommonRoutesConfig } from './common/common.routes.config'
 import { ProductRoutes } from './products/products.routes'
-import UsersController from './users/users.controller'
 
 
 const app: Application = express()

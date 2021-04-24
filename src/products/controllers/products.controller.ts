@@ -1,6 +1,6 @@
 import express from 'express'
 import debug from 'debug'
-import ProductsService from './products.service'
+import ProductsService from '../services/products.service'
 
 const log: debug.IDebugger = debug('app:products-controller')
 
