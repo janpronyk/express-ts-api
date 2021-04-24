@@ -12,14 +12,15 @@ export class ProductRoutes extends CommonRoutesConfig {
   configureRoutes() {
 
     this.app
-        .route('/pages')
-        .get(ProductsController.list, [
-          paramsMiddleware.paginationParamsToBody
-        ])
+        .route('/products')
+        .get(
+          paramsMiddleware.validateQueryParams,
+          ProductsController.list
+        )
         .post(ProductsController.create)
 
     this.app
-        .route('/pages/:slug')
+        .route('/products/:slug')
         .get(ProductsController.get)
         .patch(ProductsController.patch)
         .delete(ProductsController.delete)

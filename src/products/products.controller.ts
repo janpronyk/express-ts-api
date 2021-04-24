@@ -6,13 +6,12 @@ const log: debug.IDebugger = debug('app:products-controller')
 
 class ProductsController {
 
-
     // TODO: add pagination
   async list(req: express.Request, res: express.Response) {
-    const { take, skip } = req.body
-    const pages = await ProductsService.findAll(
-      take, skip)
-    res.status(200).send({ pages })
+    const take = +req.query.take!
+    const skip = +req.query.skip!
+    const products = await ProductsService.findAll(take, skip)
+    res.status(200).send({ products })
   }
 
   async create(req: express.Request, res: express.Response) {
@@ -28,8 +27,8 @@ class ProductsController {
 
   async get(req: express.Request, res: express.Response) {
     const { slug } = req.params
-    const page = await ProductsService.findBySlug(slug)
-    res.status(200).send({ page })
+    const product = await ProductsService.findBySlug(slug)
+    res.status(200).send({ product })
   }
 
   async delete(req: express.Request, res: express.Response) {

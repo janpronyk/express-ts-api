@@ -8,7 +8,7 @@ import debug from 'debug'
 import helmet from 'helmet'
 import { CommonRoutesConfig } from './common/common.routes.config'
 import { ProductRoutes } from './products/products.routes'
-import { UserRoutes } from '../boilerplate/users/users.routes.config'
+import UsersController from './users/users.controller'
 
 
 const app: Application = express()
@@ -45,7 +45,7 @@ if(process.env.DEBUG) {
 
 app.use(expressWinston.logger(loggerOptions))
 
-routes.push(new UserRoutes(app))
+// routes.push(new UsersController(app))
 routes.push(new ProductRoutes(app))
 
 app.get('/', (req: Request, res: Response) => {

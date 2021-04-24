@@ -1,7 +1,0 @@
-export enum PermissionFlag {
-  FREE_PERMISSION = 0,
-  PAID_PERMISSION = 1,
-  EDITOR_PERMISSIONS = 2,
-  ADMIN_PERMISSION = 3,
-  ALL_PERMISSIONS = 456
-}
