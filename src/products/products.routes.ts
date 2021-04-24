@@ -1,6 +1,6 @@
 import { Application } from 'express'
 import { CommonRoutesConfig } from '../common/common.routes.config';
-import paramsMiddleware from '../common/middleware/params.middleware';
+import QueryMiddleware from '../common/middleware/query.middleware';
 import ProductsController from './products.controller';
 
 
@@ -14,7 +14,7 @@ export class ProductRoutes extends CommonRoutesConfig {
     this.app
         .route('/products')
         .get(
-          paramsMiddleware.validateQueryParams,
+          QueryMiddleware.validateQueryParams,
           ProductsController.list
         )
         .post(ProductsController.create)

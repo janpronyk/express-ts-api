@@ -140,16 +140,16 @@ model Product {
 
     weight Float
 
-    price Decimal
+    price Decimal @db.Decimal(8,2)
     discount Int @default(0)
 
-    categoryId Int  @map("category_id")
-    category ProductCategory @relation(fields: [categoryId], references: [id])
+    categoryId Int?  @map("category_id")
+    category ProductCategory? @relation(fields: [categoryId], references: [id])
 
     materials ProductMaterial[]
 
-    authorId Int @map("author_id")
-    User User @relation(fields: [authorId], references: [id])
+    authorId Int? @map("author_id")
+    User User? @relation(fields: [authorId], references: [id])
 
     createdAt DateTime @default(now()) @db.Timestamp(6) @map("created_at")
     updatedAt DateTime @default(now()) @db.Timestamp(6) @map("updated_at")

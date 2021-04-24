@@ -3,7 +3,7 @@ import { Request, Response, NextFunction } from 'express'
 
 const log: debug.IDebugger = debug('app:params-middleware')
 
-class ParamsMiddleware {
+class QueryMiddleware {
     validateQueryParams(req: Request, res: Response, next: NextFunction) {
 
         const { take, skip } = req.query
@@ -15,10 +15,10 @@ class ParamsMiddleware {
         //@ts-ignore
         if (!parseInt(skip))
             return res.status(400).send({ errors: ['Skip query param must be numeric']})
-            // throw new Error('Skip query param must be numeric')
+            
         next()   
     }
 }
 
-export default new ParamsMiddleware()
+export default new QueryMiddleware()
 
